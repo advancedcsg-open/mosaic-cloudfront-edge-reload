@@ -1,0 +1,12 @@
+name: 'Mosaic cloudfront edge reload function'
+description: 'Reloads the cloudfront distributions with the provided lambda edge functions'
+inputs:
+  cloudfront-id:
+    description: 'Id of the cloudfront distribution that should be updated.'
+    required: true
+  lambda-arns:
+    description: 'Arns of the lambdas, separated by commas, should include the version, Example format: {arn}:{version},{arn}:{version}.'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

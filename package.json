@@ -1,0 +1,24 @@
+{
+  "name": "cloudfront-edge-reload",
+  "version": "1.0.0",
+  "description": "Action to reload edge functions on a Cloudfront distribution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/advancedcsg-open/mosaic-cloudfront-edge-reload.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/advancedcsg-open/mosaic-cloudfront-edge-reload/issues"
+  },
+  "homepage": "https://github.com/advancedcsg-open/mosaic-cloudfront-edge-reload#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.7",
+    "@actions/github": "^5.0.0",
+    "aws-sdk": "^2.911.0"
+  }
+}

@@ -1,4 +1,4 @@
-# mosaic-cloudfront-edge-reload
+# mosaic-cloudfront-edge-reload-action
 Action to reload edge functions on a Cloudfront distribution
 
 ## Inputs
@@ -17,7 +17,7 @@ Action to reload edge functions on a Cloudfront distribution
 ## Example usage
 
 ```
-uses: mosaic-cloudfront-edge-reload@v1.0
+uses: mosaic-cloudfront-edge-reload-action@v1.0
 with:
     cloudfront-id: '{cloudfront-id}'
     lambda-arns: 'arn:aws:lambda:{region}:{account-id}:function:{function-name}:{version},arn:aws:lambda:{region}:{account-id}:function:{function-name}:{version}'

@@ -16,6 +16,17 @@ const getConfig = async (id) => {
   return await cloudfront.getDistributionConfig(params).promise()
 }
 
+function updateBehavior (behavior, lambdaARNDict) {
+  if (behavior.LambdaFunctionAssociations.Quantity > 0) {
+    behavior.LambdaFunctionAssociations.Items.forEach(assoc => {
+      const { name, version } = splitArn(assoc.LambdaFunctionARN)
+      if (name in lambdaARNDict && version !== lambdaARNDict[name]) {
+        assoc.LambdaFunctionARN = `${name}:${lambdaARNDict[name]}`
+      }
+    })
+  }
+}
+
 const updateCloudfront = async (id, tag, distributionConfig, lambdaARNDict) => {
   const updateConfigParams = {
     Id: id,
@@ -24,20 +35,16 @@ const updateCloudfront = async (id, tag, distributionConfig, lambdaARNDict) => {
 
   updateConfigParams.DistributionConfig = distributionConfig
 
+  const defaultCacheBehavior = updateConfigParams.DistributionConfig.DefaultCacheBehavior
+  updateBehavior(defaultCacheBehavior, lambdaARNDict)
+
   updateConfigParams.DistributionConfig.CacheBehaviors.Items.forEach(behavior => {
-    if (behavior.LambdaFunctionAssociations.Quantity > 0) {
-      behavior.LambdaFunctionAssociations.Items.forEach(assoc => {
-        const { name, version } = splitArn(assoc.LambdaFunctionARN)
-        if (name in lambdaARNDict && version !== lambdaARNDict[name]) {
-          assoc.LambdaFunctionARN = `${name}:${lambdaARNDict[name]}`
-        }
-      })
-    }
+    updateBehavior(behavior, lambdaARNDict)
   })
 
   return await cloudfront
-    .updateDistribution(updateConfigParams)
-    .promise()
+      .updateDistribution(updateConfigParams)
+      .promise()
 }
 
 (async () => {

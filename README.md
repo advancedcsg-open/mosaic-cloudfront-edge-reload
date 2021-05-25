@@ -17,7 +17,7 @@ Action to reload edge functions on a Cloudfront distribution
 ## Example usage
 
 ```
-uses: mosaic-cloudfront-edge-reload-action@v1.0
+uses: advancedcsg-open/mosaic-cloudfront-edge-reload-action@v1.0
 with:
     cloudfront-id: '{cloudfront-id}'
     lambda-arns: 'arn:aws:lambda:{region}:{account-id}:function:{function-name}:{version},arn:aws:lambda:{region}:{account-id}:function:{function-name}:{version}'

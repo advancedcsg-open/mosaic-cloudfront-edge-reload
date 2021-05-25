@@ -19,9 +19,11 @@ const getConfig = async (id) => {
 function updateBehavior (behavior, lambdaARNDict) {
   if (behavior.LambdaFunctionAssociations.Quantity > 0) {
     behavior.LambdaFunctionAssociations.Items.forEach(assoc => {
+      console.info(`Found function: ${assoc.LambdaFunctionARN} for origin: ${behavior.TargetOriginId}`)
       const { name, version } = splitArn(assoc.LambdaFunctionARN)
       if (name in lambdaARNDict && version !== lambdaARNDict[name]) {
         assoc.LambdaFunctionARN = `${name}:${lambdaARNDict[name]}`
+        console.info(`Updating function to version: ${lambdaARNDict[name]}`)
       }
     })
   }
@@ -53,6 +55,8 @@ const updateCloudfront = async (id, tag, distributionConfig, lambdaARNDict) => {
     const lambdaARNsString = core.getInput('lambda-arns')
     const lambdaARNs = lambdaARNsString ? lambdaARNsString.split(',') : null
     if (lambdaARNs) {
+      console.log(`Function to update: ${lambdaARNs}`)
+      
       const lambdaARNDict = {}
       lambdaARNs.forEach((arn) => {
         const { name, version } = splitArn(arn)

@@ -49,6 +49,13 @@ const updateCloudfront = async (id, tag, distributionConfig, lambdaARNDict) => {
       .promise()
 }
 
+const updateEdgeFunctions = async (cloudfrontId, lambdaARNDict) => {
+  const config = await getConfig(cloudfrontId)
+  const distributionConfig = config.DistributionConfig
+  const Etag = config.ETag
+  await updateCloudfront(cloudfrontId, Etag, distributionConfig, lambdaARNDict)
+}
+
 (async () => {
   try {
     const cloudfrontId = core.getInput('cloudfront-id')
@@ -63,10 +70,12 @@ const updateCloudfront = async (id, tag, distributionConfig, lambdaARNDict) => {
         lambdaARNDict[name] = version
       })
 
-      const config = await getConfig(cloudfrontId)
-      const distributionConfig = config.DistributionConfig
-      const Etag = config.ETag
-      await updateCloudfront(cloudfrontId, Etag, distributionConfig, lambdaARNDict)
+      try {
+        await updateEdgeFunctions(cloudfrontId, lambdaARNDict)
+      } catch (error) {
+        console.error('Failed to update Edge functions, retrying...')
+        await updateEdgeFunctions(cloudfrontId, lambdaARNDict)
+      }
     } else {
       core.setFailed('No lambda ARNs provided')
     }
